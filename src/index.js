@@ -62,7 +62,7 @@ client.on(Events.InteractionCreate, async interaction => {
       const id = randomUUID();
       // Replace the caller’s older confirmations and expire all sessions after five minutes.
       for (const [key, p] of pending) if (p.userId === interaction.user.id && p.guildId === interaction.guildId) pending.delete(key);
-      pending.set(id, { userId: interaction.user.id, guildId: interaction.guildId, template, fingerprint: state.fingerprint, expires: Date.now() + 300000 });
+      pending.set(id, { userId: interaction.user.id, guildId: interaction.guildId, template, expires: Date.now() + 300000 });
       const { plan } = state;
       await interaction.editReply({
         content: `**IRREVERSIBLE — ${state.guild.name}**\nDisable Community, permanently delete ${state.channels.length} channels/categories (including their messages and threads) and ${state.deletable.length} roles. Keep ${state.preserved.length} protected roles, server name and icon.\nCreate ${plan.roles.length} roles and ${plan.categories.length + plan.channels.length} channels/categories from template **${template.name}**.\nRole assignments are lost, including your admin role if it is deleted. The server owner keeps access. Backup is structure only; no message recovery or automatic rollback.\nConfirm within 5 minutes.`,
@@ -81,7 +81,6 @@ client.on(Events.InteractionCreate, async interaction => {
     active.add(interaction.guildId);
     try {
       const state = await preflight(client.rest, interaction.guildId, interaction.user.id, client.user.id, session.template);
-      if (state.fingerprint !== session.fingerprint) throw new Error('Server structure changed since preview. Run the command again for a fresh confirmation.');
       await notify(interaction, 'Confirmed. Starting the load; all progress and the final result are logged to the bot console.');
       const job = await applyTemplate({ rest: client.rest, state, template: session.template, userId: interaction.user.id, log });
       await notify(interaction, `Template loaded successfully. Job: ${job}. Server name and icon preserved.`);

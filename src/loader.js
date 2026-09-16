@@ -1,4 +1,4 @@
-import { createHash, randomUUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import { mkdir, writeFile, appendFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { makePlan, roleBody, channelBody, bits, key } from './plan.js';
@@ -23,10 +23,7 @@ export async function preflight(rest, guildId, userId, botId, template) {
   const preserved = guild.roles.filter(r => r.id === guildId || r.managed);
   const maxBitrate = guild.features.includes('VIP_REGIONS') ? 384000 : [96000, 128000, 256000, 384000][guild.premium_tier ?? 0];
   const plan = makePlan(template, { preservedCount: preserved.length, maxBitrate });
-  const fingerprint = createHash('sha256').update(JSON.stringify({
-    roles: guild.roles, channels, features: guild.features, name: guild.name, icon: guild.icon,
-  })).digest('hex');
-  return { guild, channels, deletable, preserved, plan, fingerprint };
+  return { guild, channels, deletable, preserved, plan };
 }
 
 export async function applyTemplate({ rest, state, template, userId, log, backupDir = 'backups' }) {

@@ -28,6 +28,17 @@ If `npm` is unavailable in your original terminal after installation, use the fu
 
 Manual setup requires Node.js 22.12+ and npm: clone/download the repository, run `npm ci --ignore-scripts`, copy `.env.example` to `.env`, enter `DISCORD_TOKEN`, optionally enter `GUILD_ID`, and run `npm start`. Never commit `.env` or share the token. Only one bot process should run for this application, including across different computers.
 
+## Update without re-entering your token
+
+Stop the running bot with **Ctrl+C** and wait for it to exit. From your existing bot folder, run:
+
+```bash
+curl -fsSL "https://raw.githubusercontent.com/klokwark/template-bot/main/update.sh?update=$(date +%s)" -o update.sh
+bash update.sh
+```
+
+The updater downloads the latest code, installs dependencies and starts the bot. It preserves your existing `.env` and `backups/` and never asks for your token. For subsequent updates, run `bash update.sh`. It refuses to update while the bot lock exists; after a crash, stop all copies before removing a stale `.bot.lock`.
+
 ## What it does
 
 - Registers both slash commands on every startup, without a separate registration/build command. Upserts only these two commands.
@@ -50,7 +61,7 @@ Supported template channels: text, voice and categories. Announcement, stage, fo
 
 The backup contains guild/role/channel configuration and the template, **not messages, member role assignments, or a full server export**. There is no automatic restore command or transactional rollback. On failure, stop and inspect the console and operation journal before making further changes. A timeout/network failure can occur after Discord applied the last request; verify the live server before retrying. Starting the command again wipes the current structure again. Keep the bot running while loading; shutdown signals wait for active jobs. After a crash, ensure all copies are stopped before removing `.bot.lock` and restarting. A restart never automatically resumes a destructive job.
 
-Avoid editing the server during a load. Changes between preview and confirmation invalidate the preview. If the original channel disappears or an interaction expires, the final result may only be available in the console. Other bots, onboarding, automod and integrations may still reference deleted IDs and need manual reconfiguration. Discord can impose additional feature restrictions; such API errors stop the load and may leave a partial result.
+Avoid editing the server during a load. The loader refreshes server state and checks administrator permissions and role hierarchy again on confirmation; it does not compare a preview fingerprint. If the original channel disappears or an interaction expires, the final result may only be available in the console. Other bots, onboarding, automod and integrations may still reference deleted IDs and need manual reconfiguration. Discord can impose additional feature restrictions; such API errors stop the load and may leave a partial result.
 
 ## Development
 
