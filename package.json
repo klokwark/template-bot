@@ -1,0 +1,10 @@
+{
+  "name": "template-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Administrator-only Discord template loader with preflight checks and console logging",
+  "engines": { "node": ">=22.12.0" },
+  "scripts": { "start": "node --env-file=.env src/index.js", "test": "node --test" },
+  "dependencies": { "discord.js": "14.27.0" }
+}
