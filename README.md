@@ -1,6 +1,6 @@
 # Discord template bot
 
-Plain JavaScript + discord.js. No build step. Requires Node.js **22.12+** (24 LTS recommended), npm, Bash, curl and tar.
+Plain JavaScript + discord.js. No build step. Requires Bash, curl and tar. The installer checks for Node.js **22.12+** and npm, loads an existing nvm installation if needed, and installs **Node.js 24** through nvm when no compatible runtime is available. It installs nvm automatically if missing.
 
 ## Install and run
 
@@ -17,14 +17,16 @@ The installer downloads and extracts the repository into a new `template-bot` fo
 4. Run `/teamplte-load template:CODE` or `/template-load template:CODE`. A `https://discord.new/CODE` or `https://discord.com/template/CODE` URL also works.
 5. Review the irreversible change preview and click **Permanently erase and load template** within five minutes. Only the requesting administrator can confirm. Administrator permission and hierarchy are checked again immediately before starting.
 
-To restart:
+To restart (the installer prints an exact command, including loading nvm when needed):
 
 ```bash
 cd template-bot
 npm start
 ```
 
-Manual setup: clone/download the repository, run `npm ci --ignore-scripts`, copy `.env.example` to `.env`, enter `DISCORD_TOKEN`, optionally enter `GUILD_ID`, and run `npm start`. Never commit `.env` or share the token. Only one bot process should run for this application, including across different computers.
+If `npm` is unavailable in your original terminal after installation, use the full restart command printed by the installer. Installing inside a Bash script does not change its parent terminal's PATH. nvm's installer also configures the shell profile for future sessions; existing nvm default aliases are preserved.
+
+Manual setup requires Node.js 22.12+ and npm: clone/download the repository, run `npm ci --ignore-scripts`, copy `.env.example` to `.env`, enter `DISCORD_TOKEN`, optionally enter `GUILD_ID`, and run `npm start`. Never commit `.env` or share the token. Only one bot process should run for this application, including across different computers.
 
 ## What it does
 
