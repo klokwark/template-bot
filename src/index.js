@@ -38,10 +38,10 @@ async function notify(interaction, content) {
 client.once(Events.ClientReady, async () => {
   try {
     log('INFO', `Logged in as ${client.user.tag}.`);
-    await register(guildId);
     log('INFO', `Invite: https://discord.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`);
+    await register(guildId);
     log('INFO', 'READY. Move the bot’s own role above every ordinary role before loading a template.');
-  } catch (error) { log('ERROR', `Startup registration failed: ${error.message}`); await shutdown(1); }
+  } catch (error) { log('ERROR', `Startup registration failed: ${error.message}. If GUILD_ID is set, invite the bot to that server using the URL above, then restart.`); await shutdown(1); }
 });
 client.on(Events.InteractionCreate, async interaction => {
   if (!interaction.isChatInputCommand() && !interaction.isButton()) return;
